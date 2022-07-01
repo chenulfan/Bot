@@ -74,5 +74,5 @@ const takeAScreenShot = async (page) => {
     return imgName;
 }
 
-const needtoOpenBrowser = false;
+const needtoOpenBrowser = true;
 scrape(needtoOpenBrowser);

@@ -1,7 +1,7 @@
 const chalk = require('chalk');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-const nodemailer = require('nodemailer');
 
 const sendEmail = (imgUrl) => {
     console.log(chalk.yellow('📧 init email service...'));
