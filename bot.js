@@ -13,14 +13,41 @@ const scrape = async (needtoOpenBrowser) => {
     await loginToSite(page);
     await openSideBar(page);
     await moveToEnrollToCoursePage(page);
+    
+    // const courseCodeNumber = '142178';
+    const courseCodeNumber = '142202';
+    
+    await searchCourse(page, courseCodeNumber);
+    await moveToCourseInfoPage(page);
+    await enrollToWaitingList(page);
     const imgName = await takeAScreenShot(page);
     await closeBrowser(browser);
     await sendEmail(imgName);
     console.log(chalk.green('🤖 Finished scrape'));
 }
 
+const enrollToCourse = async (page) => {
+    await page.waitForSelector('span.fa-pencil-alt')
+    let spans = await page.$$('span.fa-pencil-alt')
+    const enrollToCourseIcon = spans[0];
+    await enrollToCourseIcon.evaluate(e => e.click());
+}
+
+const enrollToWaitingList = async (page) => {
+    await page.waitForSelector('span.fa-users')
+    let spans = await page.$$('span.fa-users')
+    const enrollToWaitingListIcaon = spans[0];
+    await enrollToWaitingListIcaon.evaluate(e => e.click());
+}
+
 const closeBrowser = async (browser) => {
     await browser.close();
+}
+
+const moveToCourseInfoPage = async (page) => {
+    const courseInfoButtonId = '#Details1';
+    await page.waitForSelector(courseInfoButtonId);
+    await page.click(courseInfoButtonId);
 }
 
 const moveToEnrollToCoursePage = async (page) => {
@@ -62,8 +89,18 @@ const loginToSite = async (page) => {
     await page.keyboard.type(process.env.SITE_EMAIL)
     await page.focus(passwordInputId)
     await page.keyboard.type(process.env.SITE_PASSWORD)
-
+    
     await page.click(loginButtonId);
+}
+
+const searchCourse = async (page, codeNumber) => {
+    const subjectCodeInputId = '#SubjectCode';
+    const searchCodeNumberId = '#searchButton';
+
+    await page.focus(subjectCodeInputId)
+    await page.keyboard.type(codeNumber)
+
+    await page.click(searchCodeNumberId);
 }
 
 const takeAScreenShot = async (page) => {
