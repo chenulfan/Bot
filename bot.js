@@ -16,8 +16,8 @@ const scrape = async (needtoOpenBrowser) => {
     
     // SEMETER A
     // const courseCodeNumber2 = '142199'; // Big data
-    const courseCodeNumber1 =   '141163'; // Astro-physics
-    const courseCodeNumber2 =   '142216'; // devops
+    const courseCodeNumber1 =   '142216'; // devops
+    const courseCodeNumber2 =   '141163'; // Astro-physics
     
     // SEMSTER B
     const courseCodeNumber3 =   '142190'; // Tech Etic and Trial
@@ -34,15 +34,29 @@ const scrape = async (needtoOpenBrowser) => {
     const courseCodeNumber10 =  '131111'; // סיבוכיות
     
     // SADNA 
-    const courseCodeNumber11 =  '150029'; // סדנה
+    const sadna =  '150029'; // סדנה
 
+    const courses = [courseCodeNumber1, courseCodeNumber2, courseCodeNumber3, courseCodeNumber4,sadna ,courseCodeNumber5,
+        courseCodeNumber6, courseCodeNumber7, courseCodeNumber8, courseCodeNumber9, courseCodeNumber10
+    ]
     
-    await searchCourse(page, courseCodeNumber);
+    await searchCourse(page, courses[0]);
     await moveToCourseInfoPage(page);
-    await enrollToCourse(page);
-    const imgName = await takeAScreenShot(page);
+    // await enrollToCourse(page);
+
+    // const imgName = await takeAScreenShot(page);
+
+    for(let i = 1; i < courses.length; i++){
+        await openSideBar(page);
+        await moveToEnrollToCoursePage(page);
+        await searchCourse(page, courses[i]);
+        await moveToCourseInfoPage(page);
+        // await enrollToCourse(page);
+    }
+
+
     await closeBrowser(browser);
-    await sendEmail(imgName);
+    // await sendEmail(imgName);
     console.log(chalk.green('🤖 Finished scrape'));
 }
 
