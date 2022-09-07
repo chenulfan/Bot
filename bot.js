@@ -14,12 +14,32 @@ const scrape = async (needtoOpenBrowser) => {
     await openSideBar(page);
     await moveToEnrollToCoursePage(page);
     
-    // const courseCodeNumber = '142178';
-    const courseCodeNumber = '142202';
+    // SEMETER A
+    // const courseCodeNumber2 = '142199'; // Big data
+    const courseCodeNumber1 =   '141163'; // Astro-physics
+    const courseCodeNumber2 =   '142216'; // devops
+    
+    // SEMSTER B
+    const courseCodeNumber3 =   '142190'; // Tech Etic and Trial
+    const courseCodeNumber4 =   '142209'; // value creation
+    const courseCodeNumber5 =   '141418'; // computer communication
+    const courseCodeNumber6 =   '811245'; // computer communication
+    
+    // HOVA A
+    const courseCodeNumber7 =   '131113'; // חישוביות
+    const courseCodeNumber8 =   '131116'; // מערכות הפעלה
+    
+    // HOVA B
+    const courseCodeNumber9 =   '131112'; // בסיסי נתונים
+    const courseCodeNumber10 =  '131111'; // סיבוכיות
+    
+    // SADNA 
+    const courseCodeNumber11 =  '150029'; // סדנה
+
     
     await searchCourse(page, courseCodeNumber);
     await moveToCourseInfoPage(page);
-    await enrollToWaitingList(page);
+    await enrollToCourse(page);
     const imgName = await takeAScreenShot(page);
     await closeBrowser(browser);
     await sendEmail(imgName);
