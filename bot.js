@@ -5,26 +5,16 @@ const chalk = require('chalk');
 const fs = require('fs')
 require('dotenv').config();
 
-
-const scrape = async (needtoOpenBrowser) => {
-    console.log(chalk.yellow('🤖 Start scrape'))
-    const browser = await lunchBrowser(needtoOpenBrowser);
-    const page = await moveToUrl(browser, process.env.SITE_URL);
-    await loginToSite(page);
-    await openSideBar(page);
-    await moveToEnrollToCoursePage(page);
-    
     // SEMETER A
-    // const courseCodeNumber2 = '142199'; // Big data
     const courseCodeNumber1 =   '142216'; // devops
     const courseCodeNumber2 =   '141163'; // Astro-physics
     
     // SEMSTER B
     const courseCodeNumber3 =   '142190'; // Tech Etic and Trial
     const courseCodeNumber4 =   '142209'; // value creation
-    const courseCodeNumber5 =   '141418'; // computer communication
-    const courseCodeNumber6 =   '811245'; // computer communication
-    
+    const courseCodeNumber5 =   '811245'; // aklim 
+    const courseCodeNumber6 =   '141418'; // computer communication
+
     // HOVA A
     const courseCodeNumber7 =   '131113'; // חישוביות
     const courseCodeNumber8 =   '131116'; // מערכות הפעלה
@@ -34,36 +24,56 @@ const scrape = async (needtoOpenBrowser) => {
     const courseCodeNumber10 =  '131111'; // סיבוכיות
     
     // SADNA 
-    const sadna =  '150029'; // סדנה
+    const preSadna =  '131120'; // מיומנות לסדנה
+    const sadna =  '150055'; // סדנה
+    
 
-    const courses = [courseCodeNumber1, courseCodeNumber2, courseCodeNumber3, courseCodeNumber4,sadna ,courseCodeNumber5,
+
+const scrape = async (needtoOpenBrowser) => {
+
+    const courses = [courseCodeNumber1, courseCodeNumber2, courseCodeNumber3, courseCodeNumber4,preSadna, sadna ,courseCodeNumber5,
         courseCodeNumber6, courseCodeNumber7, courseCodeNumber8, courseCodeNumber9, courseCodeNumber10
     ]
-    
-    await searchCourse(page, courses[0]);
-    await moveToCourseInfoPage(page);
-    // await enrollToCourse(page);
 
-    // const imgName = await takeAScreenShot(page);
-
-    for(let i = 1; i < courses.length; i++){
-        await openSideBar(page);
-        await moveToEnrollToCoursePage(page);
-        await searchCourse(page, courses[i]);
-        await moveToCourseInfoPage(page);
-        // await enrollToCourse(page);
+    console.log(chalk.yellow('🤖 Start scrape'))
+    const browser = await lunchBrowser(needtoOpenBrowser);
+    const page = await moveToUrl(browser, process.env.SITE_URL);
+    await loginToSite(page);
+  
+    for(let i = 0; i < courses.length; i++){
+        try{
+            await openSideBar(page);
+            await moveToEnrollToCoursePage(page);
+            await searchCourse(page, courses[i]);
+            await moveToCourseInfoPage(page);
+            await enrollToCourse(page, courses[i]);
+            const imgName = await takeAScreenShot(page);
+            sendEmail(imgName);
+        }
+        catch(err){
+            console.log(chalk.red(err.message))
+        }
     }
 
 
     await closeBrowser(browser);
-    // await sendEmail(imgName);
     console.log(chalk.green('🤖 Finished scrape'));
 }
 
-const enrollToCourse = async (page) => {
-    await page.waitForSelector('span.fa-pencil-alt')
+const enrollToCourse = async (page, courseCode) => {
+    const computerCommunicationCode = '141418'
+
+    await page.waitForSelector('button')
     let spans = await page.$$('span.fa-pencil-alt')
-    const enrollToCourseIcon = spans[0];
+    let enrollToCourseIcon;
+    
+    if(courseCode == computerCommunicationCode){
+        enrollToCourseIcon = spans[1];
+    }
+    else{
+        enrollToCourseIcon = spans[0];
+    }
+    
     await enrollToCourseIcon.evaluate(e => e.click());
 }
 
@@ -140,7 +150,7 @@ const searchCourse = async (page, codeNumber) => {
 const takeAScreenShot = async (page) => {
     const timePhotoTaken = moment().format('HH-mm-ss');
     const imgName = 'img-' + timePhotoTaken + '.png';
-    await page.screenshot({ path: imgName });
+    await page.screenshot({ path: 'screenshots/' + imgName });
     console.log(chalk.green('📸 Screenshot taken'))
     return imgName;
 }

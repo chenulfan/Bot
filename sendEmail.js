@@ -21,7 +21,7 @@ const sendEmail = (imgUrl) => {
         text: 'we added down below screenshot of the confirmation of the course.', 
         attachments: [{
             filename: imgUrl,
-            path: __dirname + '/' + imgUrl,
+            path: __dirname + '/screenshots/' + imgUrl,
             cid: 'pic'
         }]
     };
