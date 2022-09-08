@@ -35,6 +35,7 @@ const scrape = async (needtoOpenBrowser) => {
         courseCodeNumber6, courseCodeNumber7, courseCodeNumber8, courseCodeNumber9, courseCodeNumber10
     ]
 
+
     console.log(chalk.yellow('🤖 Start scrape'))
     const browser = await lunchBrowser(needtoOpenBrowser);
     const page = await moveToUrl(browser, process.env.SITE_URL);
@@ -45,16 +46,14 @@ const scrape = async (needtoOpenBrowser) => {
             await openSideBar(page);
             await moveToEnrollToCoursePage(page);
             await searchCourse(page, courses[i]);
-            await moveToCourseInfoPage(page);
             await enrollToCourse(page, courses[i]);
-            const imgName = await takeAScreenShot(page);
-            sendEmail(imgName);
+            // const imgName = await takeAScreenShot(page);
+            // sendEmail(imgName);
         }
         catch(err){
             console.log(chalk.red(err.message))
         }
     }
-
 
     await closeBrowser(browser);
     console.log(chalk.green('🤖 Finished scrape'));
@@ -62,19 +61,23 @@ const scrape = async (needtoOpenBrowser) => {
 
 const enrollToCourse = async (page, courseCode) => {
     const computerCommunicationCode = '141418'
+    const sql = '131112'
+    const complications = '131111'
 
     await page.waitForSelector('button')
-    let spans = await page.$$('span.fa-pencil-alt')
-    let enrollToCourseIcon;
     
     if(courseCode == computerCommunicationCode){
-        enrollToCourseIcon = spans[1];
+        await page.click('#REG3')
+    }    
+    else if(courseCode == sql){
+        await page.click('#REG4')
+    }
+    else if(courseCode == complications){
+        await page.click('#REG3')
     }
     else{
-        enrollToCourseIcon = spans[0];
+        await page.click('#REG1')
     }
-    
-    await enrollToCourseIcon.evaluate(e => e.click());
 }
 
 const enrollToWaitingList = async (page) => {
