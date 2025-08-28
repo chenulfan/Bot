@@ -16,7 +16,7 @@ const sendEmail = (imgUrl) => {
 
     const mailOptions = {
         from: 'Mta-course-bot@gmail.com', 
-        to: 'chenulfan@gmail.com', 
+        to: 'someone@gmail.com', 
         subject: 'Hello from your favorite BOT', 
         text: 'we added down below screenshot of the confirmation of the course.', 
         attachments: [{
